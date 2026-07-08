@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Progress | Quants Portal</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap');
+
+  :root {
+    --bg:      #0f1117;
+    --surface: #1a1d27;
+    --border:  #2a2d3a;
+    --accent:  #f59e0b;
+    --text:    #e8eaf0;
+    --muted:   #8b90a0;
+    --green:   #22c55e;
+    --red:     #ef4444;
+    --orange:  #f97316;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* Header */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 18px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    font-family: 'Fraunces', serif;
+    font-size: 1.2rem;
+    font-weight: 900;
+  }
+
+  .logo span { color: var(--accent); }
+
+  .back-link {
+    color: var(--muted);
+    font-size: 0.82rem;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .back-link:hover { color: var(--text); }
+
+  /* Lookup */
+  .lookup-section {
+    padding: 48px 40px 32px;
+    max-width: 600px;
+  }
+
+  .lookup-section h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 2rem;
+    font-weight: 900;
+    margin-bottom: 6px;
+  }
+
+  .lookup-section p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-bottom: 24px;
+  }
+
+  .lookup-row {
+    display: flex;
+    gap: 10px;
+  }
+
+  .lookup-input {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .lookup-input:focus { border-color: var(--accent); }
+
+  .lookup-btn {
+    background: var(--accent);
+    color: #0f1117;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+
+  .lookup-btn:hover { background: #fbbf24; }
+
+  .lookup-error {
+    margin-top: 10px;
+    font-size: 0.82rem;
+    color: var(--red);
+    display: none;
+  }
+
+  /* Dashboard */
+  #dashboard {
+    display: none;
+    padding: 0 40px 60px;
+    max-width: 1000px;
+  }
+
+  .dash-header {
+    padding: 24px 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 32px;
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+  }
+
+  .dash-name {
+    font-family: 'Fraunces', serif;
+    font-size: 1.6rem;
+    font-weight: 900;
+  }
+
+  .dash-tag {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  /* Summary strip */
+  .summary-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .summary-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .summary-val {
+    font-family: 'Fraunces', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .summary-lbl {
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* Attempts table */
+  .section-heading {
+    font-family: 'Fraunces', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 14px;
+    color: var(--text);
+  }
+
+  .attempts-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 36px;
+    font-size: 0.85rem;
+  }
+
+  .attempts-table th {
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .attempts-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  .attempts-table tr:last-child td { border-bottom: none; }
+  .attempts-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .score-chip {
+    font-family: 'Fraunces', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .stat-green { color: var(--green); font-weight: 600; }
+  .stat-red   { color: var(--red);   font-weight: 600; }
+  .stat-muted { color: var(--muted); }
+
+  .time-val { color: var(--muted); font-size: 0.8rem; }
+
+  /* Topic weakness */
+  .topic-section { margin-bottom: 36px; }
+
+  .topic-bar-row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .topic-bar-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    display: grid;
+    grid-template-columns: 140px 1fr auto;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .topic-label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .bar-track {
+    height: 6px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: var(--red);
+    transition: width 0.6s ease;
+  }
+
+  .bar-fill.good   { background: var(--green); }
+  .bar-fill.mid    { background: var(--orange); }
+  .bar-fill.poor   { background: var(--red); }
+
+  .topic-pct {
+    font-size: 0.82rem;
+    font-weight: 600;
+    min-width: 42px;
+    text-align: right;
+  }
+
+  /* Loading */
+  #loading-msg {
+    padding: 24px 40px;
+    color: var(--muted);
+    font-size: 0.9rem;
+    display: none;
+  }
+
+  /* No data */
+  #no-data-msg {
+    display: none;
+    padding: 32px 40px;
+  }
+
+  .no-data-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px;
+    max-width: 460px;
+    text-align: center;
+  }
+
+  .no-data-card h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+  }
+
+  .no-data-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+
+  @media (max-width: 700px) {
+    header, .lookup-section, #dashboard, #loading-msg, #no-data-msg { padding-left: 20px; padding-right: 20px; }
+    .lookup-row { flex-direction: column; }
+    .summary-strip { grid-template-columns: repeat(2, 1fr); }
+    .topic-bar-item { grid-template-columns: 110px 1fr auto; }
+    .attempts-table { font-size: 0.78rem; }
+    .attempts-table th, .attempts-table td { padding: 8px 10px; }
+    .dash-header { flex-direction: column; gap: 4px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Quants <span>Portal</span></div>
+  <a class="back-link" href="index.html">← Back to Tests</a>
+</header>
+
+<div class="lookup-section">
+  <h1>Your Progress</h1>
+  <p>Enter the name you used when taking tests to see your history.</p>
+  <div class="lookup-row">
+    <input class="lookup-input" type="text" id="nameInput"
+           placeholder="Enter your name exactly as used in tests"
+           autocomplete="off">
+    <button class="lookup-btn" onclick="lookupStudent()">Look Up →</button>
+  </div>
+  <div class="lookup-error" id="lookup-error">No results found. Check the spelling of your name.</div>
+</div>
+
+<div id="loading-msg">Loading your data…</div>
+<div id="no-data-msg"><div class="no-data-card"><h3>No tests found</h3><p>We couldn't find any test attempts for that name. Make sure you spell it exactly as you did when taking the test.</p></div></div>
+
+<div id="dashboard">
+  <div class="dash-header">
+    <div class="dash-name" id="dash-name">—</div>
+    <div class="dash-tag" id="dash-tag">—</div>
+  </div>
+
+  <!-- Summary -->
+  <div class="summary-strip">
+    <div class="summary-card">
+      <span class="summary-val" id="s-tests">—</span>
+      <span class="summary-lbl">Tests Taken</span>
+    </div>
+    <div class="summary-card">
+      <span class="summary-val" id="s-avg">—</span>
+      <span class="summary-lbl">Avg Score</span>
+    </div>
+    <div class="summary-card">
+      <span class="summary-val" id="s-best">—</span>
+      <span class="summary-lbl">Best Score</span>
+    </div>
+    <div class="summary-card">
+      <span class="summary-val" id="s-accuracy">—</span>
+      <span class="summary-lbl">Overall Accuracy</span>
+    </div>
+  </div>
+
+  <!-- Attempts history -->
+  <div class="section-heading">Attempt History</div>
+  <table class="attempts-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Test</th>
+        <th>Batch</th>
+        <th>Score</th>
+        <th>Correct</th>
+        <th>Wrong</th>
+        <th>Skipped</th>
+        <th>Time</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody id="attempts-tbody"></tbody>
+  </table>
+
+  <!-- Topic weakness map -->
+  <div class="topic-section">
+    <div class="section-heading">Topic-wise Accuracy</div>
+    <div class="topic-bar-row" id="topic-bars"></div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+// CONFIG — paste the same Apps Script URL as in test files
+// ══════════════════════════════════════════════════════
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby90nemCixABgbkzsZEBkd1lbjBjvOj4ekSBYNoduvBa5kzgqRETzKMiA5IArf9WJGQ3g/exec";
+
+// ══════════════════════════════════════════════════════
+// LOOKUP
+// ══════════════════════════════════════════════════════
+function lookupStudent() {
+  const name = document.getElementById('nameInput').value.trim();
+  if (!name) return;
+
+  const errEl = document.getElementById('lookup-error');
+  errEl.style.display = 'none';
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('no-data-msg').style.display = 'none';
+  document.getElementById('loading-msg').style.display = 'block';
+
+  if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === "PASTE_YOUR_APPS_SCRIPT_URL_HERE") {
+    document.getElementById('loading-msg').style.display = 'none';
+    errEl.textContent = "Apps Script URL not configured. Add it to tracker.html.";
+    errEl.style.display = 'block';
+    return;
+  }
+
+  fetch(`${APPS_SCRIPT_URL}?action=getStudent&name=${encodeURIComponent(name)}`)
+    .then(r => r.json())
+    .then(data => {
+      document.getElementById('loading-msg').style.display = 'none';
+      if (!data.rows || data.rows.length === 0) {
+        document.getElementById('no-data-msg').style.display = 'block';
+        return;
+      }
+      renderDashboard(name, data.rows);
+    })
+    .catch(() => {
+      document.getElementById('loading-msg').style.display = 'none';
+      errEl.textContent = "Could not connect to the server. Try again.";
+      errEl.style.display = 'block';
+    });
+}
+
+// ══════════════════════════════════════════════════════
+// RENDER DASHBOARD
+// ══════════════════════════════════════════════════════
+function renderDashboard(name, rows) {
+  // rows = array of Sheet rows, columns:
+  // [0:timestamp, 1:name, 2:pin, 3:batch, 4:testName, 5:score, 6:maxMarks, 7:correct, 8:wrong, 9:skipped, 10:timeTaken, 11:topicErrors, 12:wrongQuestions]
+
+  const totalTests = rows.length;
+  const scores     = rows.map(r => Number(r[5]));
+  const maxMarks   = rows.map(r => Number(r[6]));
+  const corrects   = rows.map(r => Number(r[7]));
+  const wrongs     = rows.map(r => Number(r[8]));
+
+  const avgScore   = Math.round(scores.reduce((a,b) => a+b, 0) / totalTests);
+  const bestScore  = Math.max(...scores);
+  const totalC     = corrects.reduce((a,b) => a+b, 0);
+  const totalW     = wrongs.reduce((a,b) => a+b, 0);
+  const attempted  = totalC + totalW;
+  const accuracy   = attempted > 0 ? Math.round((totalC / attempted) * 100) : 0;
+
+  document.getElementById('s-tests').textContent    = totalTests;
+  document.getElementById('s-avg').textContent      = avgScore;
+  document.getElementById('s-best').textContent     = bestScore;
+  document.getElementById('s-accuracy').textContent = accuracy + '%';
+  document.getElementById('dash-name').textContent  = name;
+  document.getElementById('dash-tag').textContent   = `${totalTests} test${totalTests > 1 ? 's' : ''} taken`;
+
+  // Attempts table
+  const tbody = document.getElementById('attempts-tbody');
+  tbody.innerHTML = '';
+
+  rows.forEach((row, idx) => {
+    const ts       = row[0];
+    const batch    = row[3]  || '—';
+    const testName = row[4]  || '—';
+    const score    = row[5]  || 0;
+    const maxMark  = row[6]  || 0;
+    const correct  = row[7]  || 0;
+    const wrong    = row[8]  || 0;
+    const skipped  = row[9]  || 0;
+    const timeTaken = row[10] || 0;
+
+    const timeMins = Math.floor(Number(timeTaken) / 60);
+    const timeSecs = Number(timeTaken) % 60;
+    const dateStr  = ts ? new Date(ts).toLocaleDateString('en-IN', { day:'numeric', month:'short' }) : '—';
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="stat-muted">${idx + 1}</td>
+      <td>${testName}</td>
+      <td class="stat-muted">${batch}</td>
+      <td><span class="score-chip">${score}</span> <span class="stat-muted">/ ${maxMark}</span></td>
+      <td class="stat-green">${correct}</td>
+      <td class="stat-red">${wrong}</td>
+      <td class="stat-muted">${skipped}</td>
+      <td class="time-val">${timeMins}m ${String(timeSecs).padStart(2,'0')}s</td>
+      <td class="stat-muted">${dateStr}</td>`;
+    tbody.appendChild(tr);
+  });
+
+  // Topic accuracy
+  const topicAgg = {}; // topic → { wrong, total }
+
+  rows.forEach(row => {
+    try {
+      const te = JSON.parse(row[11] || '{}');
+      Object.entries(te).forEach(([topic, wrongs]) => {
+        if (!topicAgg[topic]) topicAgg[topic] = { wrong: 0, total: 0 };
+        topicAgg[topic].wrong += wrongs;
+      });
+    } catch {}
+  });
+
+  // We don't have total per topic directly from topicErrors alone.
+  // Show accuracy as "errors per attempt" — lower is better.
+  const barsEl = document.getElementById('topic-bars');
+  barsEl.innerHTML = '';
+
+  const topicEntries = Object.entries(topicAgg).sort((a,b) => b[1].wrong - a[1].wrong);
+
+  if (topicEntries.length === 0) {
+    barsEl.innerHTML = '<p style="color:var(--muted);font-size:0.85rem;">No topic data available yet.</p>';
+  } else {
+    const maxWrong = Math.max(...topicEntries.map(e => e[1].wrong));
+
+    topicEntries.forEach(([topic, stats]) => {
+      const pct  = maxWrong > 0 ? Math.round((stats.wrong / maxWrong) * 100) : 0;
+      const cls  = pct > 66 ? 'poor' : pct > 33 ? 'mid' : 'good';
+      const item = document.createElement('div');
+      item.className = 'topic-bar-item';
+      item.innerHTML = `
+        <div class="topic-label">${topic}</div>
+        <div class="bar-track"><div class="bar-fill ${cls}" style="width:${pct}%"></div></div>
+        <div class="topic-pct" style="color:var(--${cls === 'good' ? 'green' : cls === 'mid' ? 'orange' : 'red'})">${stats.wrong} err</div>`;
+      barsEl.appendChild(item);
+    });
+
+    barsEl.insertAdjacentHTML('afterend',
+      '<p style="color:var(--muted);font-size:0.75rem;margin-top:10px;margin-bottom:0">Bar length = relative error count. Shorter = fewer mistakes.</p>');
+  }
+
+  document.getElementById('dashboard').style.display = 'block';
+}
+
+// Enter key triggers lookup
+document.getElementById('nameInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') lookupStudent();
+});
+</script>
+
+<!-- ══ APPS SCRIPT — FULL CODE (doPost + doGet) ═════════
+
+Paste this entire block into your Apps Script. Replace any existing code.
+
+Sheet columns (Submissions tab), Row 1 headers:
+A:Timestamp  B:Name  C:PIN  D:Batch  E:TestName
+F:Score  G:MaxMarks  H:Correct  I:Wrong  J:Skipped
+K:TimeTaken  L:TopicErrors  M:WrongQuestions
+
+─────────────────────────────────────────────────────────
+
+function doPost(e) {
+  try {
+    var sheet = SpreadsheetApp.getActiveSpreadsheet()
+                              .getSheetByName("Submissions");
+    var data = JSON.parse(e.postData.contents);
+
+    sheet.appendRow([
+      new Date(),
+      data.name            || "",
+      data.pin             || "",
+      data.batch           || "",
+      data.testName        || "",
+      data.score           || 0,
+      data.maxMarks        || 0,
+      data.correct         || 0,
+      data.wrong           || 0,
+      data.skipped         || 0,
+      data.timeTaken       || 0,
+      JSON.stringify(data.topicErrors    || {}),
+      (data.wrongQuestions || []).join(",")
+    ]);
+
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: "success" }))
+      .setMimeType(ContentService.MimeType.JSON);
+
+  } catch(err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: "error", message: err.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function doGet(e) {
+  const action = e.parameter.action;
+  const sheet  = SpreadsheetApp.getActiveSpreadsheet()
+                               .getSheetByName("Submissions");
+
+  if (action === "getStudent") {
+    const name = (e.parameter.name || "").toLowerCase();
+    const data = sheet.getDataRange().getValues();
+    const rows = data.slice(1).filter(row =>
+      row[1].toString().toLowerCase() === name
+    );
+    return ContentService
+      .createTextOutput(JSON.stringify({ rows }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  return ContentService
+    .createTextOutput(JSON.stringify({ error: "Unknown action" }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+════════════════════════════════════════════════════════ -->
+
+</body>
+</html>
