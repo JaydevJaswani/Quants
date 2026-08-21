@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Number System — Prep Check | Quants Portal</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap');
+
+  :root {
+    --bg:       #0f1117;
+    --surface:  #1a1d27;
+    --border:   #2a2d3a;
+    --accent:   #f59e0b;
+    --text:     #e8eaf0;
+    --muted:    #8b90a0;
+    --green:    #22c55e;
+    --red:      #ef4444;
+    --orange:   #f97316;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+  }
+
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ════════════════════════════
+     LOGIN SCREEN
+  ════════════════════════════ */
+  #login-screen {
+    min-height: 100vh;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    gap: 32px;
+  }
+
+  #login-screen.active {
+    display: flex;
+  }
+
+  .login-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px;
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .login-logo {
+    font-family: 'Fraunces', serif;
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+
+  .login-logo span { color: var(--accent); }
+
+  .login-card h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.6rem;
+    font-weight: 900;
+    margin-bottom: 6px;
+  }
+
+  .login-card .sub {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 28px;
+    line-height: 1.5;
+  }
+
+  .form-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .form-input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+    margin-bottom: 20px;
+  }
+
+  .form-input:focus { border-color: var(--accent); }
+
+  .form-input.error { border-color: var(--red); }
+
+  .field-error {
+    font-size: 0.75rem;
+    color: var(--red);
+    margin-top: -14px;
+    margin-bottom: 14px;
+    display: none;
+  }
+
+  .field-error.visible { display: block; }
+
+  .start-btn {
+    width: 100%;
+    background: var(--accent);
+    color: #0f1117;
+    border: none;
+    border-radius: 8px;
+    padding: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .start-btn:hover { background: #fbbf24; }
+
+  .login-meta {
+    display: flex;
+    gap: 24px;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .meta-item { display: flex; flex-direction: column; gap: 2px; }
+  .meta-val { font-size: 1rem; font-weight: 600; color: var(--text); }
+  .meta-key { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+
+  /* ════════════════════════════
+     TEST SCREEN
+  ════════════════════════════ */
+  #test-screen {
+    display: none;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  #test-screen.active { display: flex; }
+
+  /* Top bar */
+  .test-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .topbar-left { display: flex; flex-direction: column; gap: 2px; }
+  .topbar-testname { font-weight: 600; font-size: 0.9rem; }
+  .topbar-student { font-size: 0.75rem; color: var(--muted); }
+
+  .topbar-center {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .q-progress {
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .timer-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 18px;
+    font-family: 'Fraunces', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 1px;
+    min-width: 90px;
+    text-align: center;
+    transition: color 0.3s;
+  }
+
+  .timer-box.warning { color: var(--orange); border-color: var(--orange); }
+  .timer-box.danger  { color: var(--red);    border-color: var(--red); animation: pulse 1s infinite; }
+
+  @keyframes pulse { 0%,100% { opacity:1 } 50% { opacity:0.5 } }
+
+  .submit-btn-top {
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    border-radius: 8px;
+    padding: 8px 18px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .submit-btn-top:hover { background: var(--accent); color: #0f1117; }
+
+  /* Question area */
+  .test-body {
+    flex: 1;
+    display: flex;
+    gap: 0;
+    max-width: 1100px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 32px 24px;
+  }
+
+  /* Main question panel */
+  .q-panel {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .q-number {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .q-stem {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-bottom: 28px;
+    color: var(--text);
+  }
+
+  .options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 32px;
+  }
+
+  .option-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    text-align: left;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    transition: border-color 0.15s, background 0.15s;
+  }
+
+  .option-btn:hover { border-color: var(--accent); background: rgba(245,158,11,0.05); }
+
+  .option-btn.selected {
+    border-color: var(--accent);
+    background: rgba(245,158,11,0.1);
+    color: var(--accent);
+  }
+
+  .option-label {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .option-btn.selected .option-label {
+    background: var(--accent);
+    color: #0f1117;
+    border-color: var(--accent);
+  }
+
+  /* Nav buttons */
+  .q-nav {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .nav-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+
+  .nav-btn:hover { border-color: var(--accent); }
+  .nav-btn:disabled { opacity: 0.3; cursor: default; }
+
+  .clear-btn {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    cursor: pointer;
+    padding: 10px;
+    transition: color 0.2s;
+  }
+
+  .clear-btn:hover { color: var(--red); }
+
+  /* Question palette sidebar */
+  .q-palette {
+    width: 220px;
+    flex-shrink: 0;
+    margin-left: 32px;
+  }
+
+  .palette-title {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .palette-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    margin-bottom: 20px;
+  }
+
+  .palette-btn {
+    aspect-ratio: 1;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    font-size: 0.7rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .palette-btn:hover { border-color: var(--accent); }
+  .palette-btn.current { border-color: var(--accent); color: var(--accent); }
+  .palette-btn.answered { background: rgba(34,197,94,0.15); border-color: rgba(34,197,94,0.4); color: var(--green); }
+
+  .palette-legend { display: flex; flex-direction: column; gap: 8px; }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+
+  .legend-dot {
+    width: 10px; height: 10px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  .ld-answered { background: rgba(34,197,94,0.4); }
+  .ld-current  { border: 1.5px solid var(--accent); background: transparent; }
+  .ld-unanswered { background: var(--surface); border: 1px solid var(--border); }
+
+  /* ════════════════════════════
+     RESULT SCREEN
+  ════════════════════════════ */
+  #result-screen {
+    display: none;
+    min-height: 100vh;
+    padding: 48px 32px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  #result-screen.active { display: block; }
+
+  .result-header { margin-bottom: 40px; }
+
+  .result-header .eyebrow {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .result-header h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 2rem;
+    font-weight: 900;
+    margin-bottom: 4px;
+  }
+
+  .result-header .student-name {
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  /* Score card */
+  .score-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 32px;
+    align-items: center;
+    margin-bottom: 28px;
+  }
+
+  .big-score {
+    text-align: center;
+    padding-right: 32px;
+    border-right: 1px solid var(--border);
+  }
+
+  .big-score .score-val {
+    font-family: 'Fraunces', serif;
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .big-score .score-max {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  .score-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .score-stat { display: flex; flex-direction: column; gap: 4px; }
+
+  .score-stat .val {
+    font-family: 'Fraunces', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+  }
+
+  .score-stat .lbl {
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .val-green { color: var(--green); }
+  .val-red   { color: var(--red); }
+  .val-muted { color: var(--muted); }
+
+  /* Topic breakdown */
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+
+  .topic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 36px;
+  }
+
+  .topic-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+
+  .topic-name {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .topic-stats {
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+  }
+
+  .topic-correct { font-size: 1.3rem; font-weight: 700; color: var(--green); }
+  .topic-wrong   { font-size: 0.95rem; color: var(--red); }
+  .topic-total   { font-size: 0.8rem; color: var(--muted); margin-left: auto; }
+
+  /* Answer review */
+  .review-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 40px; }
+
+  .review-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    display: grid;
+    grid-template-columns: 32px 1fr auto;
+    gap: 16px;
+    align-items: start;
+  }
+
+  .review-item.correct { border-left: 3px solid var(--green); }
+  .review-item.wrong   { border-left: 3px solid var(--red); }
+  .review-item.skipped { border-left: 3px solid var(--muted); }
+
+  .r-num {
+    font-family: 'Fraunces', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--muted);
+  }
+
+  .r-content { display: flex; flex-direction: column; gap: 6px; }
+
+  .r-stem {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text);
+  }
+
+  .r-answer {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .r-answer .correct-ans { color: var(--green); font-weight: 600; }
+  .r-answer .wrong-ans   { color: var(--red); }
+
+  .r-explanation {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-top: 4px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+  }
+
+  .r-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+
+  .r-badge.correct { background: rgba(34,197,94,0.1);  color: var(--green); }
+  .r-badge.wrong   { background: rgba(239,68,68,0.1);  color: var(--red); }
+  .r-badge.skipped { background: rgba(139,144,160,0.1); color: var(--muted); }
+
+  /* Result actions */
+  .result-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .pdf-btn {
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    border-radius: 8px;
+    padding: 12px 32px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .pdf-btn:hover { background: var(--accent); color: #0f1117; }
+
+  .back-link {
+    color: var(--muted);
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .back-link:hover { color: var(--text); }
+
+  .submit-status {
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 8px;
+  }
+
+  .submit-status.ok  { color: var(--green); }
+  .submit-status.err { color: var(--red); }
+
+  @media (max-width: 700px) {
+    .test-body { flex-direction: column; padding: 20px 16px; }
+    .q-palette { width: 100%; margin-left: 0; margin-top: 24px; }
+    .score-card { grid-template-columns: 1fr; }
+    .big-score { border-right: none; border-bottom: 1px solid var(--border); padding-right: 0; padding-bottom: 20px; }
+    .score-stats { grid-template-columns: repeat(3,1fr); }
+    .review-item { grid-template-columns: 28px 1fr; }
+    .r-badge { display: none; }
+    .test-topbar { padding: 12px 16px; }
+    .topbar-center { gap: 12px; }
+  }
+
+  /* ── Numeric answer (Section A) ── */
+  .numeric-wrap { display: flex; flex-direction: column; gap: 10px; max-width: 360px; }
+  .numeric-hint { font-size: 0.8rem; color: var(--muted); }
+  .numeric-input {
+    width: 100%; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px 18px; color: var(--text);
+    font-family: 'DM Sans', sans-serif; font-size: 1.15rem; font-weight: 600;
+    letter-spacing: 0.5px; outline: none; transition: border-color 0.2s;
+  }
+  .numeric-input:focus { border-color: var(--accent); }
+  .numeric-input.filled { border-color: var(--accent); }
+  .q-section-tag {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase;
+    color: var(--accent); border: 1px solid var(--accent); border-radius: 999px; padding: 3px 10px;
+  }
+  .sec-hint { font-size: 0.75rem; color: var(--muted); margin-top: 6px; letter-spacing: 0.5px; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════
+     LOGIN SCREEN
+══════════════════════════════════ -->
+<div id="login-screen" class="active">
+  <div class="login-card">
+    <div class="login-logo">Quants <span>Portal</span></div>
+    <h1>Number System — Prep Check</h1>
+    <p class="sub">NU1–NU3 · 30 questions · 60 minutes<br>Section A (Q1–10): type the number · +4, no negative<br>Section B (Q11–30): MCQ · +4 correct · −1 wrong</p>
+
+    <label class="form-label" for="studentName">Your Name</label>
+    <input class="form-input" type="text" id="studentName" placeholder="Enter your full name" autocomplete="off">
+    <div class="field-error" id="err-name">Please enter your name.</div>
+
+    <label class="form-label" for="studentPin">Your PIN</label>
+    <input class="form-input" type="text" id="studentPin" placeholder="e.g. IMS1234567890 or STU1234567890" autocomplete="off" maxlength="13" style="letter-spacing:1px;">
+    <div class="field-error" id="err-pin">PIN must start with IMS or STU followed by exactly 10 digits.</div>
+
+    <label class="form-label" for="studentBatch">Your Batch</label>
+    <select class="form-input" id="studentBatch">
+      <option value="">— Select your batch —</option>
+      <optgroup label="Classroom">
+        <option value="A2701">A2701</option>
+        <option value="A2702">A2702</option>
+        <option value="A2703">A2703</option>
+        <option value="A2704">A2704</option>
+        <option value="A2705">A2705</option>
+        <option value="A2706">A2706</option>
+        <option value="A2707">A2707</option>
+        <option value="A2708">A2708</option>
+        <option value="A2709">A2709</option>
+        <option value="A2710">A2710</option>
+        <option value="A2711">A2711</option>
+        <option value="A2712">A2712</option>
+        <option value="A2714">A2714</option>
+        <option value="A2715">A2715</option>
+        <option value="A2716">A2716</option>
+        <option value="A2717">A2717</option>
+        <option value="A2718">A2718</option>
+        <option value="A2719">A2719</option>
+        <option value="A2720">A2720</option>
+      </optgroup>
+      <optgroup label="School">
+        <option value="Zebar">Zebar</option>
+      </optgroup>
+      <optgroup label="IPMAT 28">
+        <option value="Z2801">Z2801</option>
+        <option value="S2801">S2801</option>
+        <option value="A2804">A2804</option>
+        <option value="PN2801">PN2801</option>
+      </optgroup>
+      <optgroup label="Admin">
+        <option value="Admin">Admin</option>
+      </optgroup>
+    </select>
+    <div class="field-error" id="err-batch">Please select your batch.</div>
+
+    <button class="start-btn" onclick="startTest()">Start Test →</button>
+
+    <div class="login-meta">
+      <div class="meta-item">
+        <span class="meta-val">60</span>
+        <span class="meta-key">Minutes</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-val">30</span>
+        <span class="meta-key">Questions</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-val">120</span>
+        <span class="meta-key">Max Marks</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     TEST SCREEN
+══════════════════════════════════ -->
+<div id="test-screen" class="screen">
+
+  <div class="test-topbar">
+    <div class="topbar-left">
+      <span class="topbar-testname">Number System — Prep Check</span>
+      <span class="topbar-student" id="topbar-name">—</span>
+    </div>
+    <div class="topbar-center">
+      <span class="q-progress" id="q-progress">Q 1 / 30</span>
+      <span class="q-section-tag" id="q-section-tag">Section A</span>
+      <div class="timer-box" id="timer">60:00</div>
+    </div>
+    <button class="submit-btn-top" onclick="confirmSubmit()">Submit Test</button>
+  </div>
+
+  <div class="test-body">
+    <div class="q-panel">
+      <div class="q-number" id="q-number">QUESTION 1</div>
+      <div class="q-stem"  id="q-stem">Loading…</div>
+      <div class="options-list" id="options-list"></div>
+      <div class="q-nav">
+        <button class="nav-btn" id="prev-btn" onclick="goQ(-1)">← Prev</button>
+        <button class="nav-btn" id="next-btn" onclick="goQ(1)">Next →</button>
+        <button class="clear-btn" onclick="clearAnswer()">Clear answer</button>
+      </div>
+    </div>
+
+    <div class="q-palette">
+      <div class="palette-title">Questions</div>
+      <div class="palette-grid" id="palette-grid"></div>
+      <div class="palette-legend">
+        <div class="legend-item"><div class="legend-dot ld-answered"></div>Answered</div>
+        <div class="legend-item"><div class="legend-dot ld-current"></div>Current</div>
+        <div class="legend-item"><div class="legend-dot ld-unanswered"></div>Not visited</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════
+     RESULT SCREEN
+══════════════════════════════════ -->
+<div id="result-screen" class="screen">
+
+  <div class="result-header">
+    <div class="eyebrow">Test Complete</div>
+    <h1>Your Result</h1>
+    <div class="student-name" id="r-student-name">—</div>
+  </div>
+
+  <div class="score-card">
+    <div class="big-score">
+      <div class="score-val" id="r-score">—</div>
+      <div class="score-max" id="r-maxmarks">/ 120</div>
+    </div>
+    <div class="score-stats">
+      <div class="score-stat">
+        <span class="val val-green" id="r-correct">—</span>
+        <span class="lbl">Correct</span>
+      </div>
+      <div class="score-stat">
+        <span class="val val-red" id="r-wrong">—</span>
+        <span class="lbl">Wrong</span>
+      </div>
+      <div class="score-stat">
+        <span class="val val-muted" id="r-skipped">—</span>
+        <span class="lbl">Skipped</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">Topic-wise Breakdown</div>
+  <div class="topic-grid" id="topic-grid"></div>
+
+  <div class="section-title">Question Review</div>
+  <div class="review-list" id="review-list"></div>
+
+  <div class="result-actions">
+    <button class="pdf-btn" onclick="downloadPDF()">⬇ Download PDF Report</button>
+    <a class="back-link" href="index.html">← Back to Quants Portal</a>
+    <div class="submit-status" id="submit-status">Submitting your result…</div>
+  </div>
+
+</div>
+
+<!-- jsPDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+// ══════════════════════════════════════════════════════
+// CONFIGURATION — edit these before each test
+// ══════════════════════════════════════════════════════
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby90nemCixABgbkzsZEBkd1lbjBjvOj4ekSBYNoduvBa5kzgqRETzKMiA5IArf9WJGQ3g/exec";
+const TEST_NAME       = "Number System — Prep Check";
+const MAX_MARKS       = 120;   // 30 questions × 4
+const TIMER_DURATION  = 60 * 60; // paper is 60 minutes (30 Qs, two sections)
+
+// ══════════════════════════════════════════════════════
+// QUESTIONS ARRAY — Number System (NU1–NU3) Prep Check
+// Two question types:
+//   type: "numeric"  → Section A. `answer` is a number. +4, no negative.
+//   type: "mcq"      → Section B. `answer` is index 0–3. +4 / −1.
+// Every question carries section, topic (sub-topic key for tracker), explanation.
+// ══════════════════════════════════════════════════════
+const questions = [
+  // ── SECTION A · Short Answer (Q1–Q10) ──
+  { type: "numeric", section: "A", topic: "Remainders",
+    stem: "A number, when divided by 899, leaves a remainder of 63. What remainder will it leave when divided by 29?",
+    answer: 5,
+    explanation: "899 = 29 × 31, so 29 divides 899. Remainder = 63 mod 29 = 5." },
+
+  { type: "numeric", section: "A", topic: "Remainders",
+    stem: "Find the smallest natural number that leaves a remainder of 3 when divided by 5 and a remainder of 4 when divided by 7.",
+    answer: 18,
+    explanation: "x ≡ 3 (mod 5) and x ≡ 4 (mod 7). Test 3, 8, 13, 18: 18 ÷ 7 leaves 4. Answer 18." },
+
+  { type: "numeric", section: "A", topic: "Inclusion–Exclusion",
+    stem: "How many numbers from 1 to 1000 are divisible by none of 5, 7 and 11?",
+    answer: 624,
+    explanation: "Divisible by at least one = 200 + 142 + 90 − (28 + 18 + 12) + 2 = 376. None = 1000 − 376 = 624." },
+
+  { type: "numeric", section: "A", topic: "LCM & HCF",
+    stem: "The LCM of two numbers is 20 times their HCF, and the sum of the LCM and the HCF is 2520. If one number is 480, find the other.",
+    answer: 600,
+    explanation: "21·HCF = 2520 ⇒ HCF = 120, LCM = 2400. Other = (120 × 2400) ÷ 480 = 600." },
+
+  { type: "numeric", section: "A", topic: "Factorials",
+    stem: "Find the highest power of 12 that exactly divides 50!.",
+    answer: 22,
+    explanation: "12 = 2²·3. Power of 2 in 50! = 47 ⇒ ⌊47/2⌋ = 23 pairs. Power of 3 = 16 + 5 + 1 = 22. Limiting factor is 3 ⇒ 22." },
+
+  { type: "numeric", section: "A", topic: "Inclusion–Exclusion",
+    stem: "How many numbers from 1 to 500 are divisible by 3 or 4 but not by 5?",
+    answer: 200,
+    explanation: "Divisible by 3 or 4 = 166 + 125 − 41 = 250. Of these, also divisible by 5 = 33 + 25 − 8 = 50. Answer = 250 − 50 = 200." },
+
+  { type: "numeric", section: "A", topic: "LCM & HCF",
+    stem: "Chocolates are packed in boxes of 24, 36 or 48 with none left over in each case. What is the least number of chocolates?",
+    answer: 144,
+    explanation: "Least number = LCM(24, 36, 48) = 144." },
+
+  { type: "numeric", section: "A", topic: "Factorials",
+    stem: "How many zeros are there at the end of (100! + 200!)?",
+    answer: 24,
+    explanation: "100! + 200! = 100!(1 + 200!/100!). The bracket ends in 1 (not divisible by 2 or 5), so trailing zeros = zeros of 100! = 20 + 4 = 24." },
+
+  { type: "numeric", section: "A", topic: "Digit Problems",
+    stem: "The sum of the digits of a two-digit number is 12, and the number exceeds its reverse by 18. Find the number.",
+    answer: 75,
+    explanation: "a + b = 12 and 9(a − b) = 18 ⇒ a − b = 2 ⇒ a = 7, b = 5 ⇒ 75." },
+
+  { type: "numeric", section: "A", topic: "Factors & Divisors",
+    stem: "How many natural numbers less than 100 have an odd number of factors?",
+    answer: 9,
+    explanation: "Only perfect squares have an odd number of factors: 1, 4, 9, …, 81 ⇒ 9 numbers." },
+
+  // ── SECTION B · MCQ (Q11–Q30) ──
+  { type: "mcq", section: "B", topic: "Primes",
+    stem: "The product of two two-digit prime numbers is 2117. What is the sum of these two primes?",
+    options: ["96", "102", "110", "86"], answer: 1,
+    explanation: "2117 = 29 × 73, both two-digit primes ⇒ sum = 102." },
+
+  { type: "mcq", section: "B", topic: "Digit Problems",
+    stem: "When the digits of a two-digit number are interchanged, the number decreases by 36. How many such two-digit numbers are there?",
+    options: ["5", "4", "7", "6"], answer: 3,
+    explanation: "(10a + b) − (10b + a) = 9(a − b) = 36 ⇒ a − b = 4. Numbers: 40, 51, 62, 73, 84, 95 ⇒ 6." },
+
+  { type: "mcq", section: "B", topic: "Digit Problems",
+    stem: "The sum of a two-digit number and the number obtained by reversing its digits is a perfect square. How many such two-digit numbers exist?",
+    options: ["8", "9", "7", "10"], answer: 0,
+    explanation: "Sum = 11(a + b). For a perfect square, a + b = 11 ⇒ 29, 38, 47, 56, 65, 74, 83, 92 ⇒ 8." },
+
+  { type: "mcq", section: "B", topic: "Factorials",
+    stem: "For how many values of the natural number N does N! end in exactly 24 zeros?",
+    options: ["4", "1", "5", "6"], answer: 2,
+    explanation: "99! has 22 zeros; 100! jumps to 24 (23 is skipped). 100! to 104! each have 24; 105! has 25 ⇒ 5 values." },
+
+  { type: "mcq", section: "B", topic: "Factorials",
+    stem: "Which of the following can never be the number of zeros at the end of any factorial?",
+    options: ["5", "6", "7", "8"], answer: 0,
+    explanation: "Trailing zeros jump from 4 (24!) to 6 (25!), skipping 5. So 5 is never attained." },
+
+  { type: "mcq", section: "B", topic: "Remainders",
+    stem: "A number, when successively divided by 3, 4 and 7, leaves remainders 1, 2 and 3 respectively. What is the smallest such number?",
+    options: ["41", "52", "43", "37"], answer: 2,
+    explanation: "Work backwards: N = 3 × (4 × 3 + 2) + 1 = 3 × 14 + 1 = 43." },
+
+  { type: "mcq", section: "B", topic: "LCM & HCF",
+    stem: "The HCF of two numbers is 16 and their sum is 144. How many such pairs of numbers are possible?",
+    options: ["2", "4", "5", "3"], answer: 3,
+    explanation: "Numbers = 16a, 16b with a + b = 9 and gcd(a, b) = 1: (1,8), (2,7), (4,5) ⇒ 3 pairs." },
+
+  { type: "mcq", section: "B", topic: "Digit Problems",
+    stem: "The product of the digits of a two-digit number is 18. If 63 is added to the number, the digits get reversed. Find the number.",
+    options: ["36", "29", "92", "18"], answer: 1,
+    explanation: "Adding 63 reverses the digits ⇒ 9(b − a) = 63 ⇒ b − a = 7. With a·b = 18 ⇒ a = 2, b = 9 ⇒ 29." },
+
+  { type: "mcq", section: "B", topic: "LCM & HCF",
+    stem: "A gardener plants saplings in rows of 6, 8 or 12 and is left with 5 each time; but planting 13 per row leaves none. What is the least number of saplings?",
+    options: ["173", "269", "221", "213"], answer: 2,
+    explanation: "LCM(6, 8, 12) = 24, so number = 24k + 5. Divisible by 13 ⇒ k = 9 ⇒ 221 = 13 × 17." },
+
+  { type: "mcq", section: "B", topic: "Squares & Cubes",
+    stem: "What is the smallest number by which 1080 must be multiplied so that the product becomes a perfect cube?",
+    options: ["25", "5", "15", "50"], answer: 0,
+    explanation: "1080 = 2³ · 3³ · 5. To make every exponent a multiple of 3, supply 5² ⇒ multiply by 25." },
+
+  { type: "mcq", section: "B", topic: "Squares & Cubes",
+    stem: "What is the smallest number by which 8232 must be divided so that the quotient becomes a perfect square?",
+    options: ["6", "21", "14", "42"], answer: 3,
+    explanation: "8232 = 2³ · 3 · 7³. Remove 2 · 3 · 7 = 42 to make all exponents even ⇒ 8232 ÷ 42 = 196 = 14²." },
+
+  { type: "mcq", section: "B", topic: "Factors & Divisors",
+    stem: "What is the least natural number that has exactly 15 factors?",
+    options: ["120", "144", "324", "240"], answer: 1,
+    explanation: "15 = 3 × 5 ⇒ form p²q⁴. Least = 2⁴ · 3² = 144." },
+
+  { type: "mcq", section: "B", topic: "LCM & HCF",
+    stem: "Two bells toll at intervals of 18 and 24 seconds. If they toll together at the start, how many more times will they toll together in the next 2 hours?",
+    options: ["99", "100", "101", "120"], answer: 1,
+    explanation: "LCM(18, 24) = 72 s. In 7200 s: 7200 ÷ 72 = 100 times (excluding the start)." },
+
+  { type: "mcq", section: "B", topic: "Divisibility",
+    stem: "The three-digit number '4a3' added to 984 gives the four-digit number '13b7', which is divisible by 11. What is a + b?",
+    options: ["8", "9", "11", "10"], answer: 3,
+    explanation: "403 + 10a + 984 = 1307 + 10b ⇒ b − a = 8. Divisibility of 13b7 by 11: (1 − 3 + b − 7) ⇒ b = 9, a = 1 ⇒ a + b = 10. Check: 413 + 984 = 1397 = 11 × 127." },
+
+  { type: "mcq", section: "B", topic: "Digit Problems",
+    stem: "How many two-digit numbers are equal to four times the sum of their digits?",
+    options: ["4", "3", "5", "6"], answer: 0,
+    explanation: "10a + b = 4(a + b) ⇒ b = 2a ⇒ 12, 24, 36, 48 ⇒ 4 numbers." },
+
+  { type: "mcq", section: "B", topic: "Algebraic",
+    stem: "The sum of the squares of two consecutive natural numbers is 761. What is the sum of the two numbers?",
+    options: ["41", "37", "39", "40"], answer: 2,
+    explanation: "n² + (n + 1)² = 761 ⇒ n² + n = 380 ⇒ n = 19. Numbers 19 and 20 ⇒ sum = 39." },
+
+  { type: "mcq", section: "B", topic: "Algebraic",
+    stem: "The product of four consecutive positive integers is 3024. What is the largest of these integers?",
+    options: ["8", "7", "9", "10"], answer: 2,
+    explanation: "3024 = 6 · 7 · 8 · 9 ⇒ largest = 9." },
+
+  { type: "mcq", section: "B", topic: "Factors & Divisors",
+    stem: "What is the least natural number having exactly 10 divisors?",
+    options: ["48", "36", "64", "80"], answer: 0,
+    explanation: "10 = 2 × 5 ⇒ form p⁴q (or p⁹ = 512). Least = 2⁴ · 3 = 48." },
+
+  { type: "mcq", section: "B", topic: "Algebraic",
+    stem: "The sum of the first n natural numbers is a three-digit number all of whose digits are the same. Find n.",
+    options: ["27", "45", "33", "36"], answer: 3,
+    explanation: "n(n + 1)/2 = 666 ⇒ n(n + 1) = 1332 = 36 × 37 ⇒ n = 36." },
+
+  { type: "mcq", section: "B", topic: "Factors & Divisors",
+    stem: "How many factors of 3² × 5³ × 7 are odd and greater than 1?",
+    options: ["24", "23", "22", "17"], answer: 1,
+    explanation: "No factor of 2, so all (2+1)(3+1)(1+1) = 24 factors are odd. Exclude 1 ⇒ 23." },
+];
+
+
+// ══════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════
+let studentName   = "";
+let studentPin    = "";
+let studentBatch  = "";
+let currentQ      = 0;
+let studentAns    = new Array(questions.length).fill(null); // null = skipped
+let secondsLeft   = TIMER_DURATION;
+let secondsElapsed = 0;
+let timerInterval = null;
+let testSubmitted  = false;
+
+// ══════════════════════════════════════════════════════
+// START TEST
+// ══════════════════════════════════════════════════════
+function startTest() {
+  const nameVal  = document.getElementById('studentName').value.trim();
+  const pinVal   = document.getElementById('studentPin').value.trim().toUpperCase();
+  const batchVal = document.getElementById('studentBatch').value;
+
+  // Clear previous errors
+  ['name','pin','batch'].forEach(f => {
+    document.getElementById(`err-${f}`).classList.remove('visible');
+    document.getElementById(`student${f.charAt(0).toUpperCase()+f.slice(1)}`).classList && 
+    document.getElementById(`student${f.charAt(0).toUpperCase()+f.slice(1)}`).classList.remove('error');
+  });
+
+  let valid = true;
+
+  if (!nameVal) {
+    document.getElementById('err-name').classList.add('visible');
+    document.getElementById('studentName').classList.add('error');
+    valid = false;
+  }
+
+  // PIN: must start with IMS or STU, followed by exactly 10 digits (total 13 chars)
+  const pinRegex = /^(IMS|STU)\d{10}$/;
+  if (!pinRegex.test(pinVal)) {
+    document.getElementById('err-pin').classList.add('visible');
+    document.getElementById('studentPin').classList.add('error');
+    valid = false;
+  }
+
+  if (!batchVal) {
+    document.getElementById('err-batch').classList.add('visible');
+    document.getElementById('studentBatch').classList.add('error');
+    valid = false;
+  }
+
+  if (!valid) return;
+
+  studentName  = nameVal;
+  studentPin   = pinVal;
+  studentBatch = batchVal;
+
+  document.getElementById('topbar-name').textContent    = `${studentName} · ${studentPin} · ${studentBatch}`;
+  document.getElementById('r-student-name').textContent = `${studentName} · ${studentPin} · ${studentBatch}`;
+
+  document.getElementById('login-screen').classList.remove('active');
+  document.getElementById('test-screen').classList.add('active');
+
+  buildPalette();
+  renderQ(0);
+  startTimer();
+}
+
+// ══════════════════════════════════════════════════════
+// TIMER
+// ══════════════════════════════════════════════════════
+function startTimer() {
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    secondsLeft--;
+    secondsElapsed++;
+    updateTimerDisplay();
+    if (secondsLeft <= 0) submitTest();
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const m = Math.floor(secondsLeft / 60);
+  const s = secondsLeft % 60;
+  const el = document.getElementById('timer');
+  el.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  el.className = 'timer-box';
+  if (secondsLeft <= 300) el.classList.add('warning');
+  if (secondsLeft <= 60)  el.classList.add('danger');
+}
+
+// ══════════════════════════════════════════════════════
+// RENDER QUESTION
+// ══════════════════════════════════════════════════════
+function renderQ(index) {
+  currentQ = index;
+  const q = questions[index];
+
+  document.getElementById('q-number').textContent = `QUESTION ${index + 1}`;
+  document.getElementById('q-stem').textContent   = q.stem;
+  document.getElementById('q-progress').textContent = `Q ${index + 1} / ${questions.length}`;
+  document.getElementById('q-section-tag').textContent = q.section === 'A' ? 'Section A · Short Answer' : 'Section B · MCQ';
+
+  const optList = document.getElementById('options-list');
+  optList.innerHTML = '';
+
+  if (q.type === 'numeric') {
+    const wrap = document.createElement('div');
+    wrap.className = 'numeric-wrap';
+    const hint = document.createElement('div');
+    hint.className = 'numeric-hint';
+    hint.textContent = 'Type the final numerical value. No negative marking in this section.';
+    const inp = document.createElement('input');
+    inp.className = 'numeric-input' + (studentAns[index] !== null ? ' filled' : '');
+    inp.type = 'text';
+    inp.inputMode = 'numeric';
+    inp.autocomplete = 'off';
+    inp.placeholder = 'Your answer';
+    inp.value = studentAns[index] === null ? '' : studentAns[index];
+    inp.oninput = () => {
+      const v = inp.value.trim();
+      studentAns[index] = v === '' ? null : v;
+      inp.classList.toggle('filled', v !== '');
+      updatePalette();
+    };
+    inp.onkeydown = (e) => { if (e.key === 'Enter') goQ(1); };
+    wrap.appendChild(hint);
+    wrap.appendChild(inp);
+    optList.appendChild(wrap);
+    setTimeout(() => inp.focus(), 0);
+  } else {
+    const labels = ['A', 'B', 'C', 'D'];
+    q.options.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn' + (studentAns[index] === i ? ' selected' : '');
+      btn.innerHTML = `<span class="option-label">${labels[i]}</span>${opt}`;
+      btn.onclick = () => selectAnswer(i);
+      optList.appendChild(btn);
+    });
+  }
+
+  document.getElementById('prev-btn').disabled = (index === 0);
+  document.getElementById('next-btn').disabled = (index === questions.length - 1);
+
+  updatePalette();
+}
+
+// Numeric answers: compare as numbers after trimming (so "5", "5.0", " 5 " all match 5)
+function isCorrect(q, sa) {
+  if (sa === null) return false;
+  if (q.type === 'numeric') {
+    const n = Number(String(sa).replace(/,/g, '').trim());
+    return Number.isFinite(n) && n === q.answer;
+  }
+  return sa === q.answer;
+}
+
+function displayAnswer(q, a) {
+  if (q.type === 'numeric') return String(a);
+  const labels = ['A', 'B', 'C', 'D'];
+  return `${labels[a]}. ${q.options[a]}`;
+}
+
+function selectAnswer(optIndex) {
+  studentAns[currentQ] = optIndex;
+  renderQ(currentQ);
+}
+
+function clearAnswer() {
+  studentAns[currentQ] = null;
+  renderQ(currentQ);
+}
+
+function goQ(dir) {
+  const next = currentQ + dir;
+  if (next >= 0 && next < questions.length) renderQ(next);
+}
+
+// ══════════════════════════════════════════════════════
+// PALETTE
+// ══════════════════════════════════════════════════════
+function buildPalette() {
+  const grid = document.getElementById('palette-grid');
+  grid.innerHTML = '';
+  questions.forEach((_, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'palette-btn';
+    btn.textContent = i + 1;
+    btn.id = `pal-${i}`;
+    btn.onclick = () => renderQ(i);
+    grid.appendChild(btn);
+  });
+}
+
+function updatePalette() {
+  questions.forEach((_, i) => {
+    const btn = document.getElementById(`pal-${i}`);
+    if (!btn) return;
+    btn.className = 'palette-btn';
+    if (i === currentQ)              btn.classList.add('current');
+    if (studentAns[i] !== null)      btn.classList.add('answered');
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// SUBMIT
+// ══════════════════════════════════════════════════════
+function confirmSubmit() {
+  const answered = studentAns.filter(a => a !== null).length;
+  const unanswered = questions.length - answered;
+  const msg = unanswered > 0
+    ? `You have ${unanswered} unanswered question(s). Are you sure you want to submit?`
+    : "Submit test? You cannot change answers after submission.";
+  if (confirm(msg)) submitTest();
+}
+
+function submitTest() {
+  if (testSubmitted) return;
+  testSubmitted = true;
+  clearInterval(timerInterval);
+
+  // Calculate scores
+  let correct = 0, wrong = 0, skipped = 0, score = 0;
+  const wrongQuestions = [];
+  const topicStats = {};   // topic → { correct, wrong, total }
+
+  questions.forEach((q, i) => {
+    const topic = q.topic;
+    if (!topicStats[topic]) topicStats[topic] = { correct: 0, wrong: 0, total: 0 };
+    topicStats[topic].total++;
+
+    if (studentAns[i] === null) {
+      skipped++;
+    } else if (isCorrect(q, studentAns[i])) {
+      correct++;
+      topicStats[topic].correct++;
+      score += 4;
+    } else {
+      wrong++;
+      wrongQuestions.push(i + 1);
+      topicStats[topic].wrong++;
+      score -= (q.type === 'numeric' ? 0 : 1);   // Section A: no negative
+    }
+  });
+
+  // topicErrors: how many wrong per topic (for tracker)
+  const topicErrors = {};
+  Object.entries(topicStats).forEach(([topic, stats]) => {
+    if (stats.wrong > 0) topicErrors[topic] = stats.wrong;
+  });
+
+  // Show results
+  showResults(score, correct, wrong, skipped, topicStats, wrongQuestions);
+
+  // Send to Apps Script
+  const payload = {
+    testName:       TEST_NAME,
+    name:           studentName,
+    pin:            studentPin,
+    batch:          studentBatch,
+    score:          score,
+    maxMarks:       MAX_MARKS,
+    correct:        correct,
+    wrong:          wrong,
+    skipped:        skipped,
+    timeTaken:      secondsElapsed,
+    topicErrors:    topicErrors,
+    wrongQuestions: wrongQuestions,
+    studentAnswers: studentAns,
+    timestamp:      new Date().toISOString()
+  };
+
+  sendToSheet(payload);
+}
+
+function sendToSheet(payload) {
+  const statusEl = document.getElementById('submit-status');
+  statusEl.textContent = "Submitting your result…";
+  statusEl.className = 'submit-status';
+
+  if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === "PASTE_YOUR_APPS_SCRIPT_URL_HERE") {
+    statusEl.textContent = "⚠ Apps Script URL not configured yet. Add it to APPS_SCRIPT_URL in the script.";
+    statusEl.className = 'submit-status err';
+    return;
+  }
+
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.status === 'success') {
+      statusEl.textContent = "✓ Result saved successfully.";
+      statusEl.className = 'submit-status ok';
+    } else {
+      statusEl.textContent = "⚠ Submission error: " + (data.message || 'unknown');
+      statusEl.className = 'submit-status err';
+    }
+  })
+  .catch(err => {
+    statusEl.textContent = "⚠ Could not submit. Check your connection.";
+    statusEl.className = 'submit-status err';
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// SHOW RESULTS
+// ══════════════════════════════════════════════════════
+function showResults(score, correct, wrong, skipped, topicStats, wrongQuestions) {
+  document.getElementById('test-screen').classList.remove('active');
+  document.getElementById('result-screen').classList.add('active');
+
+  document.getElementById('r-score').textContent   = score;
+  document.getElementById('r-maxmarks').textContent = `/ ${MAX_MARKS}`;
+  document.getElementById('r-correct').textContent  = correct;
+  document.getElementById('r-wrong').textContent    = wrong;
+  document.getElementById('r-skipped').textContent  = skipped;
+
+  // Topic breakdown
+  const topicGrid = document.getElementById('topic-grid');
+  topicGrid.innerHTML = '';
+  Object.entries(topicStats).forEach(([topic, stats]) => {
+    const card = document.createElement('div');
+    card.className = 'topic-card';
+    card.innerHTML = `
+      <div class="topic-name">${topic}</div>
+      <div class="topic-stats">
+        <span class="topic-correct">${stats.correct}</span>
+        <span class="topic-wrong">−${stats.wrong}</span>
+        <span class="topic-total">${stats.total} Qs</span>
+      </div>`;
+    topicGrid.appendChild(card);
+  });
+
+  // Question review
+  const reviewList = document.getElementById('review-list');
+  reviewList.innerHTML = '';
+
+  questions.forEach((q, i) => {
+    const sa = studentAns[i];
+    const ok = isCorrect(q, sa);
+    const isSkipped = sa === null;
+    const status = isSkipped ? 'skipped' : (ok ? 'correct' : 'wrong');
+
+    const item = document.createElement('div');
+    item.className = `review-item ${status}`;
+
+    let answerLine = '';
+    if (isSkipped) {
+      answerLine = `<span class="correct-ans">Ans: ${displayAnswer(q, q.answer)}</span> · <em>Not attempted</em>`;
+    } else if (ok) {
+      answerLine = `<span class="correct-ans">✓ ${displayAnswer(q, sa)}</span>`;
+    } else {
+      answerLine = `<span class="wrong-ans">✗ ${displayAnswer(q, sa)}</span> &nbsp;·&nbsp; <span class="correct-ans">Ans: ${displayAnswer(q, q.answer)}</span>`;
+    }
+
+    item.innerHTML = `
+      <div class="r-num">${i+1}</div>
+      <div class="r-content">
+        <div class="r-stem">${q.stem}</div>
+        <div class="r-answer">${answerLine}</div>
+        <div class="r-explanation">${q.explanation}</div>
+      </div>
+      <span class="r-badge ${status}">${status}</span>`;
+    reviewList.appendChild(item);
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// PDF DOWNLOAD
+// ══════════════════════════════════════════════════════
+// jsPDF core fonts can't render math glyphs — map to ASCII for the PDF only
+function pdfSafe(s) {
+  return String(s)
+    .replace(/≡/g,'=').replace(/⇒/g,'=>').replace(/×/g,'x').replace(/÷/g,'/')
+    .replace(/−/g,'-').replace(/—/g,'-').replace(/–/g,'-').replace(/·/g,'.')
+    .replace(/…/g,'...').replace(/⌊/g,'[').replace(/⌋/g,']')
+    .replace(/²/g,'^2').replace(/³/g,'^3').replace(/⁴/g,'^4').replace(/⁹/g,'^9')
+    .replace(/✓/g,'').replace(/✗/g,'')
+    .replace(/[^\x00-\x7F]/g,'');
+}
+
+function downloadPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+  const pageW = 210, pageH = 297, margin = 20;
+  const usableW = pageW - margin * 2;
+  let y = margin;
+
+  const checkPage = (needed = 10) => {
+    if (y + needed > pageH - margin) { doc.addPage(); y = margin; }
+  };
+
+  // Header
+  doc.setFontSize(18); doc.setFont('helvetica', 'bold');
+  doc.text("Quants Portal - Result Report", margin, y); y += 10;
+
+  doc.setFontSize(11); doc.setFont('helvetica', 'normal');
+  doc.text(`Name: ${studentName}`, margin, y); y += 6;
+  doc.text(`PIN: ${studentPin}   Batch: ${studentBatch}`, margin, y); y += 6;
+  doc.text(`Test: ${pdfSafe(TEST_NAME)}`, margin, y); y += 6;
+  doc.text(`Date: ${new Date().toLocaleDateString('en-IN')}`, margin, y); y += 10;
+
+  // Score
+  const scoreVal = document.getElementById('r-score').textContent;
+  const correct  = document.getElementById('r-correct').textContent;
+  const wrong    = document.getElementById('r-wrong').textContent;
+  const skipped  = document.getElementById('r-skipped').textContent;
+
+  doc.setFontSize(13); doc.setFont('helvetica', 'bold');
+  doc.text(`Score: ${scoreVal} / ${MAX_MARKS}   |   Correct: ${correct}   Wrong: ${wrong}   Skipped: ${skipped}`, margin, y);
+  y += 12;
+
+  // Review
+  doc.setFontSize(10);
+  questions.forEach((q, i) => {
+    checkPage(20);
+    const sa = studentAns[i];
+    const status = sa === null ? 'SKIPPED' : (isCorrect(q, sa) ? 'CORRECT' : 'WRONG');
+
+    doc.setFont('helvetica', 'bold');
+    doc.text(`Q${i+1}. [${status}]`, margin, y);
+    doc.setFont('helvetica', 'normal');
+
+    const stemLines = doc.splitTextToSize(pdfSafe(q.stem), usableW - 20);
+    stemLines.forEach(line => { checkPage(6); doc.text(line, margin + 20, y); y += 5; });
+
+    if (sa !== null && !isCorrect(q, sa)) {
+      doc.text(pdfSafe(`Your answer: ${displayAnswer(q, sa)}`), margin + 8, y); y += 5;
+    }
+    doc.text(pdfSafe(`Correct: ${displayAnswer(q, q.answer)}`), margin + 8, y); y += 5;
+
+    const expLines = doc.splitTextToSize('Exp: ' + pdfSafe(q.explanation), usableW - 8);
+    expLines.forEach(line => { checkPage(5); doc.text(line, margin + 8, y); y += 4; });
+
+    y += 4;
+    doc.setDrawColor(200); doc.line(margin, y, pageW - margin, y); y += 4;
+  });
+
+  doc.save(`${pdfSafe(TEST_NAME).replace(/[^A-Za-z0-9]+/g,'_')}_${studentName.replace(/\s+/g,'_')}.pdf`);
+}
+
+// ══════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════
+['studentName','studentPin','studentBatch'].forEach(id => {
+  document.getElementById(id).addEventListener('keydown', e => {
+    if (e.key === 'Enter') startTest();
+  });
+});
+</script>
+</body>
+</html>
